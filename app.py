@@ -23,8 +23,6 @@ def search_tweet():
 @app.route('/submit-tweet')
 def submit_tweet():
     phrase = request.args.get('phrase', default = "")
-    if(phrase == ""):
-        return render_template("search.html")
 
     public_tweets = twitter.search_tweets(phrase)
     sentiment_ar = twitter.process_tweets(public_tweets)
