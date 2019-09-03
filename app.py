@@ -1,6 +1,7 @@
 # import dependencies
 import os
-from flask import Flask, render_template
+import Twitter as twitter
+from flask import Flask, render_template, request
 from flask_cors import CORS
 
 # bootstrap the app
@@ -21,7 +22,13 @@ def search_tweet():
 
 @app.route('/submit-tweet')
 def submit_tweet():
-    return "tweet has been submitted"
+    phrase = request.args.get('phrase', default = "")
+    if(phrase == ""):
+        return render_template("search.html")
+
+    public_tweets = twitter.search_tweets(phrase)
+    sentiment_ar = twitter.process_tweets(public_tweets)
+    return render_template("render.html", sentiment_ar=sentiment_ar)
     
 # start the app
 if __name__ == '__main__':

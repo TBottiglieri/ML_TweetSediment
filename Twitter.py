@@ -4,6 +4,7 @@ import csv
 import re
 import sys
 import pandas as pd
+import matplotlib.pyplot as plt
 
 consumer_key='F8vEwj77kTfWUwzPhqzGU5In2'
 consumer_secret='l0bHse48RhQaGLM0P6HC8esLAFKZOCnyJ4c6MWbP1hsON9k70v'
@@ -15,40 +16,33 @@ auth=tweepy.OAuthHandler(consumer_key,consumer_secret)
 auth.set_access_token(access_token_key,access_token_secret)
 
 api=tweepy.API(auth)
-topicname='Trump'
-pubic_tweets=api.search(topicname)
 unwanted_words=['@','RT',':','https','http']
 symbols=['@','#']
 data=[]
-for tweet in pubic_tweets:
-    text=tweet.text
-    textWords=text.split()
-    #print (textWords)
-    cleanedTweet=' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|(RT)", " ", text).split())
-    print (cleanedTweet)
-    #print (TextBlob(cleanedTweet).tags)
-    analysis= TextBlob(cleanedTweet)
-    print(analysis.sentiment)
-    polarity = 'Positive'
-    if(analysis.sentiment.polarity < 0):
-        polarity = 'Negative'
-    if(0<=analysis.sentiment.polarity <=0.2):
-        polarity = 'Neutral'
-    #print (polarity)
-    dic={}
-    dic['Sentiment']=polarity
-    dic['Tweet']=cleanedTweet
-    data.append(dic)
-df=pd.DataFrame(data)
 
-print(df.head())
-df['Sentiment'].hist()
+def search_tweets(keyword):
+    public_tweets=api.search(keyword)
+    return public_tweets
 
-import matplotlib.pyplot as plt
-# plt.hist(df['Sentiment'], density=True)
-# plt.show()
+def process_tweets(tweets):
+    sentiment_ar = []
+    for tweet in tweets:
+        text=tweet.text
+        textWords=text.split()
+        #print (textWords)
+        cleanedTweet=' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|(RT)", " ", text).split())
+        print (cleanedTweet)
+        #print (TextBlob(cleanedTweet).tags)
+        analysis= TextBlob(cleanedTweet)
+        print(analysis.sentiment)
+        polarity = 'Positive'
+        if(analysis.sentiment.polarity < 0):
+            polarity = 'Negative'
+        if(0<=analysis.sentiment.polarity <=0.2):
+            polarity = 'Neutral'
+        #print (polarity)
+        sentiment_ar.append( {"Sentiment": polarity, "Tweet": cleanedTweet})
+    return sentiment_ar
 
 
-print(df.group_by())
 
-df.to_csv('analysis1.csv')

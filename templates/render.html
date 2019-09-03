@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <title>Search Tweet</title>
+    </head>
+    <body>
+        <table style="width:100%">
+            <!-- table header -->
+            {% if sentiment_ar %}
+            <tr>
+               {% for key in sentiment_ar[0] %}
+               <th> {{ key }} </th>
+               {% endfor %}
+            </tr>
+            {% endif %}
+          
+            <!-- table rows -->
+            {% for dict_item in sentiment_ar %}
+            <tr>
+               {% for value in dict_item.values() %}
+               <td> {{ value }} </td>
+               {% endfor %}
+            </tr>
+            {% endfor %}
+          </table>
+    </body>
+</html>
